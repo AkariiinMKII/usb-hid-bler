@@ -1,4 +1,7 @@
-on: push
+on:
+  push:
+  workflow_dispatch:
+name: Build
 jobs:
   hid-bler:
     name: build for HID BLER
@@ -8,13 +11,13 @@ jobs:
       run: sudo apt-get install -y git wget flex bison gperf python3 python3-venv python3-setuptools cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
     - name: Cache IDF
       id: cache-idf
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: esp-idf
         key: 1
     - name: Checkout IDF
       if: steps.cache-idf.outputs.cache-hit != 'true'
-      uses: actions/checkout@v3 
+      uses: actions/checkout@v4
       with:
         repository: espressif/esp-idf
         ref: 97fb98a91b308d4f4db54d6dd1644117607e9692
@@ -24,7 +27,7 @@ jobs:
       run: bash ${GITHUB_WORKSPACE}/esp-idf/install.sh esp32c3
         
     - name: Checkout repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: 'recursive'
         path: hid-bler
@@ -36,7 +39,7 @@ jobs:
         . ${GITHUB_WORKSPACE}/esp-idf/export.sh
         idf.py build
     - name: upload firmware
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Firmware for HID-BLER
         path: |
